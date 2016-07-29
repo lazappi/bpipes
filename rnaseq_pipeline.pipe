@@ -1,0 +1,33 @@
+GEN_DIR   =
+GEN_FASTA =
+GTF       =
+STAR_DIR  = "STAR"
+STAR_N    = 5
+NTHREADS  = 5
+STAT_DIR  = "stats"
+COUNT_DIR = "counts"
+LOG_DIR   = "logs"
+FASTQ_DIR = "fastq"
+FQC_DIR   = "fastqc"
+BAM_DIR   = "bam"
+BAM_N     = 5
+SRA_DIR   = "sra"
+SRAIDS    =
+SRADB     =
+
+Bpipe.run {
+    describe +
+    sra_download +
+    "%.sra" * [fastq_dump] +
+    fastqc +
+    star_1pass_PE +
+    star_2pass_genome +
+    star_2pass_load +
+    "%_*.fastq.gz" * [star_2pass_PE] +
+    star_2pass_remove +
+    star_stats +
+    count_GTF +
+    "%.bam" * [sort_bam + index_bam] +
+    align_stats +
+    cleanup
+}
