@@ -1,9 +1,9 @@
 kallisto_multi = {
     doc "Quantify transcript abundances of multiple samples using kallisto"
 
-    requires KAL_DIR  : "kallisto output directory"
-    requires KAL_IDX  : "Path to kallisto index"
-    requires NTHREADS : "Number of threads to use"
+    requires KAL_DIR   : "kallisto output directory"
+    requires KAL_IDX   : "Path to kallisto index"
+    requires NTHREADS  : "Number of threads to use"
     requires FASTQ_DIR : "Directory for FASTQ files"
 
     def shortPath = {path ->
@@ -50,3 +50,25 @@ kallisto_multi = {
     forward inputs
 }
 
+kallisto_merge = {
+    doc "Merge kallisto output"
+
+    requires KAL_DIR   : "kallisto output directory"
+    requires TX2GENE   : "File mapping transcripts to genes"
+    requires COUNT_DIR : "Directory for count output"
+
+    output.dir = COUNT_DIR
+
+    produce("kallisto_gene_counts.tsv") {
+        uses(thread:1) {
+            exec """
+                kallistoMerge
+                    --directory $KAL_DIR
+                    --tx2gene   $TX2GENE
+                    --outpath   $COUNT_DIR
+            """
+        }
+    }
+
+    forward inputs
+}
