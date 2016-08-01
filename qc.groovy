@@ -63,3 +63,22 @@ fastq_screen = {
         forward inputs
     }
 }
+
+multiqc = {
+    doc "Build a report using MultiQC"
+
+    requires MQC_DIR : "Directory for MultiQC output"
+
+    output.dir = MQC_DIR
+
+    uses(threads:1) {
+        produce("multiqc_report.html") {
+            exec """
+                multiqc
+                    --force
+                    --outdir $output.dir
+                    .
+            """
+        }
+    }
+}
