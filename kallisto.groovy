@@ -1,3 +1,29 @@
+kallisto_quant = {
+    doc "Quantify transcript abundances using kallisto"
+
+    requires KAL_DIR : "kallisto output directory"
+    requires KAL_IDX : "Path to kallisto index"
+    requires KAL_N   : "Number of threads for kallisto to use"
+
+    output.dir = KAL_DIR + "/" + input.split("/")[-1].prefix.prefix
+
+    transform("(.*)_1.fastq.gz", "(.*)_2.fastq.gz") to ("abundance.tsv") {
+        uses(threads:KAL_N) {
+            exec """
+                kallisto quant
+                    --index             $KAL_IDX
+                    --output-dir        ${output.dir}
+                    --bootstrap-samples 30
+                    --threads           $KAL_N
+                    $input1.gz $input2.gz
+            """
+        }
+    }
+
+    forward inputs
+}
+
+
 kallisto_multi = {
     doc "Quantify transcript abundances of multiple samples using kallisto"
 
@@ -34,14 +60,14 @@ kallisto_multi = {
     output.dir = KAL_DIR
 
     produce("kallistoMulti.log") {
-        uses(thread:NTHREADS) {
+        uses(threads:NTHREADS) {
             exec """
                 kallistoMulti
                     --index             $KAL_IDX
                     --output-dir        $KAL_DIR
                     --read1             ${R1_files}
                     --read2             ${R2_files}
-                    --bootstrap-samples 20
+                    --bootstrap-samples 30
                     --threads           $NTHREADS
             """
         }
@@ -60,7 +86,7 @@ kallisto_merge = {
     output.dir = COUNT_DIR
 
     produce("kallisto_gene_counts.tsv") {
-        uses(thread:1) {
+        uses(threads:1) {
             exec """
                 kallistoMerge
                     --directory $KAL_DIR
