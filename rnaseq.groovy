@@ -174,9 +174,8 @@ cleanup = {
         echo You have 20 seconds to kill the pipeline if necessary;
         echo .;
         echo 1. Log files will be moved to the log directory;
-        echo 2. STAR tmp directories will be deleted;
+        echo 2. STAR directories will be deleted;
         echo 3. Downloaded SRA files will be deleted;
-        echo 4. Unsorted BAM files will be deleted;
         echo .;
         sleep 20;
 
@@ -186,13 +185,11 @@ cleanup = {
         mv *.log $LOG_DIR;
         mv Log.* $LOG_DIR;
         mv *log.txt $LOG_DIR;
-        echo Removing STAR tmp directories...;
+        echo Removing STAR directories...;
         rm -rf _STARtmp;
-        rm -rf '$STAR_DIR/2pass/*_STARtmp';
+        rm -rf $STAR_DIR;
         echo Removing SRA directory...;
         rm -rf $SRA_DIR;
-        echo Removing unsorted BAM files...;
-        rm -rf '$STAR_DIR/2pass/*.Aligned.out.bam';
         echo Done!;
     """
 }
