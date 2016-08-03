@@ -45,7 +45,7 @@ star_2pass_genome = {
                     --limitSjdbInsertNsj  2000000
                     --sjdbFileChrStartEnd ${STAR_DIR}/1pass/SJ.out.tab
                     --outFileNamePrefix   ${output.dir}/
-            """, "star_1pass_SE"
+            """, "star_2pass_genome"
         }
         forward inputs
     }
