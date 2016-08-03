@@ -16,7 +16,7 @@ kallisto_quant = {
                     --bootstrap-samples 30
                     --threads           $KAL_N
                     $input1.gz $input2.gz
-            """
+            """, "kallisto_quant"
         }
     }
 
@@ -69,7 +69,7 @@ kallisto_multi = {
                     --read2             ${R2_files}
                     --bootstrap-samples 30
                     --threads           $NTHREADS
-            """
+            """, "kallisto_multi"
         }
     }
 
@@ -92,7 +92,7 @@ kallisto_merge = {
                     --directory $KAL_DIR
                     --tx2gene   $TX2GENE
                     --outpath   $COUNT_DIR
-            """
+            """, "kallisto_merge"
         }
     }
 

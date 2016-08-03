@@ -29,6 +29,6 @@ describe = {
 
     print "Starting pipeline now..."
 
-    sleep(1000)
+    exec "sleep 1", "describe"
 }
 

@@ -24,7 +24,7 @@ fastqc = {
                     --noextract
                     -o          $output.dir
                     $files
-            """
+            """, "fastqc"
         }
         forward inputs
     }
@@ -58,7 +58,7 @@ fastq_screen = {
                     --subset 100000
                     --threads $NTHREADS
                     $files
-            """
+            """, "fastq_screen"
         }
         forward inputs
     }
@@ -78,7 +78,7 @@ multiqc = {
                     --force
                     --outdir $output.dir
                     .
-            """
+            """, "multiqc"
         }
     }
 }

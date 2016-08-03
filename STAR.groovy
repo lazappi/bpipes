@@ -45,7 +45,7 @@ star_2pass_genome = {
                     --limitSjdbInsertNsj  2000000
                     --sjdbFileChrStartEnd ${STAR_DIR}/1pass/SJ.out.tab
                     --outFileNamePrefix   ${output.dir}/
-            """
+            """, "star_1pass_SE"
         }
         forward inputs
     }
@@ -60,7 +60,7 @@ star_2pass_load = {
         STAR
             --genomeDir  ${STAR_DIR}/genome_2pass
             --genomeLoad LoadAndExit
-    """
+    """, "star_2pass_load"
 
     forward inputs
 }
@@ -74,7 +74,7 @@ star_2pass_remove = {
         STAR
             --genomeDir  ${STAR_DIR}/genome_2pass
             --genomeLoad Remove
-    """
+    """, "star_2pass_remove"
 
     forward inputs
 }
@@ -99,7 +99,7 @@ star_2pass_SE = {
                 --readFilesCommand  zcat
                 --outSAMtype        BAM Unsorted SortedByCoordinate
                 --outFileNamePrefix ${output.prefix.prefix.prefix}.
-        """
+        """, "star_2pass_SE"
     }
 }
 
@@ -153,7 +153,7 @@ star_1pass_PE = {
                     --limitIObufferSize   300000000
                     --outSAMtype          None
                     --outFileNamePrefix   ${output.dir}/
-            """
+            """, "star_1pass_PE"
         }
     }
 
@@ -181,7 +181,7 @@ star_2pass_PE_GTF = {
                 --sjdbFileChrStartEnd ${STAR_DIR}/1pass/SJ.out.tab
                 --outSAMtype          BAM Unsorted SortedByCoordinate
                 --outFileNamePrefix   ${output.prefix.prefix.prefix}.
-        """
+        """, "star_2pass_PE_GTF"
     }
 }
 star_2pass_PE = {
@@ -206,7 +206,7 @@ star_2pass_PE = {
                     --outSAMunmapped      Within KeepPairs
                     --outFileNamePrefix   ${output.prefix.prefix.prefix}.
                     --limitBAMsortRAM     10000000000
-            """
+            """, "star_2pass_PE"
         }
     }
 }
@@ -221,7 +221,7 @@ star_stats = {
     output.dir    = STAT_DIR
 
     produce("star_stats.txt") {
-        exec """starStats -o $output ${log_files}"""
+        exec """starStats -o $output ${log_files}""", "star_stats"
     }
 
     forward inputs

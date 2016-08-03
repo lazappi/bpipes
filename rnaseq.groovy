@@ -17,43 +17,11 @@ count_GTF = {
                     -a        $GTF
                     -o        $output
                     $inputs.bam
-            """
+            """, "count_GTF"
         }
     }
 
     forward inputs
-}
-
-fastqc = {
-    doc "Quality control of fastq files using FASTQC"
-
-    requires FQC_DIR   : "Directory to store FastQC reports"
-    requires NTHREADS  : "Number of threads to use"
-    requires FASTQ_DIR : "Directory with FASTQ files"
-
-    def shortPath = {path ->
-        filename = path.split("/")[-1]
-        "$FASTQ_DIR/$filename"
-    }
-
-    def files = "${inputs}".split(" ")
-    files = files.collect{file -> shortPath(file)}
-    files = files.join(" ")
-
-    output.dir = FQC_DIR
-
-    uses(threads:NTHREADS) {
-        transform(".fastq.gz") to ("_fastqc.zip") {
-            exec """
-                fastqc
-                    --threads   $NTHREADS
-                    --noextract
-                    -o          $output.dir
-                    $files
-            """
-        }
-        forward inputs
-    }
 }
 
 sort_bam = {
@@ -71,7 +39,7 @@ sort_bam = {
                     -@ $BAM_N
                     -o $output.bam
                     $input.bam
-            """
+            """, "sort_bam"
         }
     }
 }
@@ -85,7 +53,7 @@ index_bam = {
 
     uses(threads:1) {
         transform("bam") to ("bam.bai") {
-            exec "samtools index $input.bam"
+            exec "samtools index $input.bam", "index_bam"
         }
         forward inputs
     }
@@ -112,7 +80,7 @@ align_stats = {
                     -t bam
                     -p ${parallel}
                     $inputs.bam
-            """
+            """, "align_stats"
         }
     }
 
@@ -135,7 +103,7 @@ sra_download = {
                 -o $output.dir
                 -t sra
                 $SRAIDS
-        """
+        """, "sra_download"
     }
 }
 
@@ -154,7 +122,7 @@ fastq_dump = {
                     --gzip
                     --outdir $output.dir
                     $input.sra
-            """
+            """, "fastq_dump"
         }
     }
 }
@@ -191,5 +159,5 @@ cleanup = {
         echo Removing SRA directory...;
         rm -rf $SRA_DIR;
         echo Done!;
-    """
+    """, "cleanup"
 }
