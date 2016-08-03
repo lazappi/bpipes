@@ -54,14 +54,18 @@ star_2pass_genome = {
 star_2pass_load = {
     doc "Load STAR genome into shared memory for 2nd pass mapping"
 
-    requires STAR_DIR : "Missing directory for mapping output"
+    requires STAR_DIR : "STAR output directory"
 
-    exec """
-        STAR
-            --genomeDir  ${STAR_DIR}/genome_2pass
-            --genomeLoad LoadAndExit
-    """, "star_2pass_load"
+    output.dir = STAR_DIR
 
+    produce("genome.loaded") {
+        exec """
+            STAR
+                --genomeDir  ${STAR_DIR}/genome_2pass
+                --genomeLoad LoadAndExit;
+            touch ${STAR_DIR}/genome.loaded
+        """, "star_2pass_load"
+    }
     forward inputs
 }
 
@@ -71,9 +75,15 @@ star_2pass_remove = {
     requires STAR_DIR : "STAR output directory"
 
     exec """
-        STAR
-            --genomeDir  ${STAR_DIR}/genome_2pass
-            --genomeLoad Remove
+        if [ -e ${STAR_DIR}/genome.loaded ];
+        then
+            STAR
+                --genomeDir  ${STAR_DIR}/genome_2pass
+                --genomeLoad Remove;
+            rm ${STAR_DIR}/genome.loaded;
+        else
+            echo "Genome was not loaded. Continuing...";
+        fi
     """, "star_2pass_remove"
 
     forward inputs
