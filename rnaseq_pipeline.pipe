@@ -2,7 +2,7 @@
 
 //-----GENERAL-----//
 NTHREADS  = 5
-GTF       = "/group/bioi1/shared/genomes/sacCer3/annotation/SGD_sacCer3.gtf"
+GTF       =
 BAM_N     = 5
 
 //-----SRA-----//
@@ -13,14 +13,14 @@ SRA_DIR   = "sra"
 //-----STAR-----//
 STAR_DIR  = "STAR"
 STAR_N    = 5
-GEN_DIR   = "/group/bioi1/shared/genomes/sacCer3/STAR-index/"
-GEN_FASTA = "/group/bioi1/shared/genomes/sacCer3/fasta/sacCer3.fa"
+GEN_DIR   =
+GEN_FASTA =
 
 //-----KALLISTO-----//
 KAL_DIR   = "kallisto"
 KAL_N     = 5
-KAL_IDX   = "/group/bioi1/shared/transcriptomes/sacCer3/indexes/kallisto/sacCer3.idx"
-TX2GENE   = "/group/bioi1/shared/transcriptomes/sacCer3/sacCer3_tx2gene.tsv"
+KAL_IDX   =
+TX2GENE   =
 
 
 //-----QUALITY CONTROL-----//
