@@ -1,33 +1,69 @@
-GEN_DIR   =
-GEN_FASTA =
-GTF       =
+//**********OPTIONS**********//
+
+//-----GENERAL-----//
+NTHREADS  = 5
+GTF       = "/group/bioi1/shared/genomes/sacCer3/annotation/SGD_sacCer3.gtf"
+BAM_N     = 5
+
+//-----SRA-----//
+SRA_DIR   = "sra"
+//SRAIDS    =
+//SRADB     =
+
+//-----STAR-----//
 STAR_DIR  = "STAR"
 STAR_N    = 5
-NTHREADS  = 5
-STAT_DIR  = "stats"
-COUNT_DIR = "counts"
-LOG_DIR   = "logs"
-FASTQ_DIR = "fastq"
+GEN_DIR   = "/group/bioi1/shared/genomes/sacCer3/STAR-index/"
+GEN_FASTA = "/group/bioi1/shared/genomes/sacCer3/fasta/sacCer3.fa"
+
+//-----KALLISTO-----//
+KAL_DIR   = "kallisto"
+KAL_N     = 5
+KAL_IDX   = "/group/bioi1/shared/transcriptomes/sacCer3/indexes/kallisto/sacCer3.idx"
+TX2GENE   = "/group/bioi1/shared/transcriptomes/sacCer3/sacCer3_tx2gene.tsv"
+
+
+//-----QUALITY CONTROL-----//
 FQC_DIR   = "fastqc"
+FQS_DIR   = "fastq_screen"
+MQC_DIR   = "multiqc"
+
+//-----DIRECTORIES-----//
+FASTQ_DIR = "fastq"
 BAM_DIR   = "bam"
-BAM_N     = 5
-SRA_DIR   = "sra"
-SRAIDS    =
-SRADB     =
+COUNT_DIR = "counts"
+STAT_DIR  = "stats"
+LOG_DIR   = "logs"
+
+//**********PIPELINE**********//
 
 Bpipe.run {
+    // Describe pipeline
     describe +
-    sra_download +
-    "%.sra" * [fastq_dump] +
+    // Get data from SRA
+    //sra_download +
+    //"%.sra" * [fastq_dump] +
+    // Quality control
     fastqc +
+    fastq_screen +
+    // Quantification
+    //kallisto_multi +
+    "%_*.fastq.gz" * [kallisto_quant] +
+    kallisto_merge +
+    // Alignment
     star_1pass_PE +
     star_2pass_genome +
     star_2pass_load +
     "%_*.fastq.gz" * [star_2pass_PE] +
     star_2pass_remove +
     star_stats +
+    // Counting
     count_GTF +
+    // Alignment stats
     "%.bam" * [sort_bam + index_bam] +
     align_stats +
+    // Report
+    multiqc
+    // Clean up
     cleanup
 }
